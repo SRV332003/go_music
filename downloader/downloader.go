@@ -1,11 +1,11 @@
 package downloader
 
 import (
+	"dhvani/scrapper"
 	"fmt"
 	"log"
-	// "os"
+	"os"
 	"path"
-	"dhvani/scrapper"
 
 	"github.com/Vernacular-ai/godub"
 	"github.com/kkdai/youtube/v2"
@@ -13,27 +13,27 @@ import (
 
 var client youtube.Client
 
-func Getfile(url string) (string, error) {
+func Getfile(url string) (string, string, error) {
 
 	video, err := client.GetVideo(url)
 	if err != nil {
-		panic(err)
+		return "", "", err
 	}
 
 	format := video.Formats.FindByItag(140)
 
 	stream, _, err := client.GetStream(video, format)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 	segment, _ := godub.NewLoader().Load(stream)
 
 	name := fmt.Sprintf("%s.mp3", video.Title)
-	// dirname, err := os.UserHomeDir()
-	// if err != nil {
-	// 	return "", err
-	// }
-	fileDestination := path.Join(name)
+	dirname, err := os.UserHomeDir()
+	if err != nil {
+		return "", "", err
+	}
+	fileDestination := path.Join(dirname, "Music", name)
 
 	log.Println("Saving file at", fileDestination)
 
@@ -43,12 +43,12 @@ func Getfile(url string) (string, error) {
 		Export(segment)
 
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	log.Println(video.Title, video.Author, "Downloaded !! ")
 
-	return fileDestination, err
+	return name, fileDestination, err
 }
 
 func FetchSearch(searchStr string) [][]string {

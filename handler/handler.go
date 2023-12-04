@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"dhvani/downloader"
 	"dhvani/filemanager"
 	"dhvani/player"
 	"fmt"
@@ -53,7 +54,7 @@ func HandleCommand(command string, args []string) {
 			fmt.Println("Invalid argument")
 			return
 		}
-		filemanager.GetSongByID(i).Play()
+		filemanager.GetSongByID(i - 1).Play()
 	case "pause":
 		player.Pause()
 	case "resume":
@@ -81,16 +82,22 @@ func HandleCommand(command string, args []string) {
 
 func handleSearch(s string) {
 	res := filemanager.Search(s)
+	ytres := downloader.FetchSearch(s)
 
 	for i, song := range res {
 		fmt.Printf("%3d. %s...\n", i+1, song.Name[:min(30, len(song.Name))])
+	}
+	count := len(res)
+
+	for i := 0; i < min(10-len(res), len(ytres)); i++ {
+		fmt.Printf("%3d. %30s\t%20s...\n", count+i+1, ytres[i][1][:min(30, len(ytres[i][1]))], ytres[i][2])
 	}
 
 	var n int
 	fmt.Print("Enter your choice (0 to exit): ")
 	fmt.Scanln(&n)
 
-	for n <= 0 || n > len(res) {
+	for n <= 0 || n > min(len(res)+len(ytres), 10) {
 		if n == 0 {
 			return
 		}
@@ -99,8 +106,22 @@ func handleSearch(s string) {
 		fmt.Scanln(&n)
 	}
 
-	fmt.Println("Playing", res[n-1].Name)
-	res[n-1].Play()
+	if n-1 < len(res) {
+
+		fmt.Println("Playing", res[n-1].Name)
+		res[n-1].Play()
+
+	} else {
+
+		fmt.Println("Downloading...")
+		name, dest, err := downloader.Getfile(ytres[n-count-1][0])
+		if err != nil {
+			panic(err)
+		}
+		filemanager.AddSong(name, dest).Play()
+		fmt.Println("Playing", name)
+
+	}
 
 }
 

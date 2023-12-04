@@ -11,7 +11,7 @@ import (
 	"strings"
 	"sync"
 
-	"golang.org/x/crypto/ssh/terminal"
+	"golang.org/x/term"
 )
 
 type Song struct {
@@ -25,14 +25,15 @@ func (s Song) String() string {
 }
 
 func (song Song) Play() {
-	player.Play(song.Path)
+
+	_, err := player.Play(song.Path)
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 var files []Song
-
-func Getfiles() {
-
-}
+var mutex sync.Mutex
 
 func init() {
 	log.Println("init Ran")
@@ -44,7 +45,7 @@ func init() {
 
 	dirname := path.Join(userDir, "Music")
 
-	mutex := sync.Mutex{}
+	mutex = sync.Mutex{}
 
 	err = filepath.Walk(dirname, func(path string, info os.FileInfo, err error) error {
 
@@ -76,8 +77,7 @@ func init() {
 }
 
 func ListFiles() {
-	cols, _, err := terminal.GetSize(int(os.Stdin.Fd()))
-
+	cols, _, err := term.GetSize(int(os.Stdout.Fd()))
 	if err != nil {
 		panic(err)
 	}
@@ -102,4 +102,15 @@ func GetSongByID(id int) Song {
 		return files[id]
 	}
 	return files[0]
+}
+
+func AddSong(name string, path string) Song {
+	var s Song
+	mutex.Lock()
+	s.ID = len(files)
+	s.Name = name
+	s.Path = path
+	files = append(files, s)
+	mutex.Unlock()
+	return s
 }
