@@ -1,80 +1,43 @@
 package scrapper
 
 import (
-	"bufio"
-	"fmt"
 	"log"
-	"os"
 	"strings"
 	"sync"
 	"regexp"
-
 	"github.com/gocolly/colly"
 )
 
-func Scrap() []string {
+var client *colly.Collector
+var mutex *sync.Mutex
+var script string
 
-	searchurl := getSearchURL()
-	c := colly.NewCollector()
-	c.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
+func ScrapLinks(search string)([]string){
 
-	mutex := &sync.Mutex{}
+	url := getSearchURL(search)
 
-	script :=""
-
-	max := 0
-
-	// select string for a tag with name ytd-video-renderer
-	c.OnHTML("script", func(e *colly.HTMLElement) {
-		// get html of the page
-		data, err := e.DOM.Html()
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		if len(data) < 300 {
-			return
-		}
-
-		mutex.Lock()
-		defer mutex.Unlock()
-		if max <= len(data) {
-			log.Println(len(data))
-			max = len(data)
-			script = data
-		}
-
-	})
-
-	
-	c.Visit(searchurl)
+	client.Visit(url)
 
 	mutex.Lock()
-
 	strings := scriptScrapper(script)
 	mutex.Unlock()
-	fmt.Println(strings)
+
+
+	log.Println(strings)
 	return strings
+
 }
 
-func getSearchURL() string {
 
-	reader := bufio.NewReader(os.Stdin)
-	song, err := reader.ReadString('\n')
-	// song := "tum ho"
+func getSearchURL(searchStr string) string {
 
-	if err != nil {
-		log.Fatal(err)
-	}
-	song = strings.Split(song, "\n")[0]
-	song = strings.ReplaceAll(song, " ", "+")
-	song = "https://www.youtube.com/results?search_query=" + song
-	fmt.Println(song)
+	searchStr = strings.ReplaceAll(searchStr, " ", "+")
+	return  "https://www.youtube.com/results?search_query=" + searchStr
 
-	return song
 }
 
 func scriptScrapper(s string) []string {
+
 	re := regexp.MustCompile(`https://i.ytimg.com/vi/[A-Za-z]{11}/`)
 	match := re.FindAllStringSubmatch(s,1000)
 
@@ -92,8 +55,42 @@ func scriptScrapper(s string) []string {
 
 		key = "https://www.youtube.com/watch?v="+strings.Split(key, "/")[4]
 
-		links = append(links,key )
+		links = append(links,key)
 	}
 
 	return links
+}
+
+
+func init(){
+	client = colly.NewCollector()
+	client.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
+
+	mutex = &sync.Mutex{}
+	
+	script = ""
+
+	client.OnHTML("script", func(e *colly.HTMLElement) {
+		
+		data, err := e.DOM.Html()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if len(data) < 300 {
+			return
+		}
+
+		mutex.Lock()
+		defer mutex.Unlock()
+		if len(script) <= len(data) {
+			log.Println(len(data))
+			script = data
+		}
+
+	})	
+
+
+
+
 }
