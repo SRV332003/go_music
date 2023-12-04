@@ -25,7 +25,6 @@ func Play(file string) (beep.Streamer, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	speaker.Clear()
 
 	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))

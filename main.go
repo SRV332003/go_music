@@ -5,6 +5,7 @@ import (
 	"dhvani/handler"
 	"log"
 	"os"
+	"os/exec"
 )
 
 func main() {
@@ -13,13 +14,17 @@ func main() {
 	// fmt.Println(filemanager.Search("tum ho"))
 
 	bufioReader := bufio.NewReaderSize(os.Stdin, 1000)
-
+	cmd := exec.Command("clear") //Linux example, its tested
+	cmd.Stdout = os.Stdout
+	cmd.Run()
 	for {
+
+		os.Stdout.WriteString("dhvani> ")
 		str, err := bufioReader.ReadString('\n')
 		if err != nil {
 			log.Fatal(err)
 		}
-		go handler.HandleInput(str)
+		handler.HandleInput(str)
 	}
 
 }

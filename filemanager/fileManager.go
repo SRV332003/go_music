@@ -2,18 +2,30 @@ package filemanager
 
 import (
 	// "fmt"
+	"dhvani/player"
+	"fmt"
 	"log"
 	"os"
 	"path"
 	"path/filepath"
 	"strings"
 	"sync"
+
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 type Song struct {
 	ID   int
 	Name string
 	Path string
+}
+
+func (s Song) String() string {
+	return fmt.Sprintf("%3d. %30s...", s.ID+1, s.Name[:min(30, len(s.Name))])
+}
+
+func (song Song) Play() {
+	player.Play(song.Path)
 }
 
 var files []Song
@@ -61,4 +73,33 @@ func init() {
 		panic(err)
 	}
 
+}
+
+func ListFiles() {
+	cols, _, err := terminal.GetSize(int(os.Stdin.Fd()))
+
+	if err != nil {
+		panic(err)
+	}
+
+	n := cols / 40
+	count := 0
+	for _, song := range files {
+		count += 1
+		if count%n == 0 {
+			fmt.Println(song)
+		} else {
+			fmt.Print(song, "\t")
+		}
+	}
+	if count%n != 0 {
+		fmt.Println()
+	}
+}
+
+func GetSongByID(id int) Song {
+	if id < len(files) && id > -1 {
+		return files[id]
+	}
+	return files[0]
 }

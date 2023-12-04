@@ -2,17 +2,18 @@ package handler
 
 import (
 	"dhvani/filemanager"
+	"dhvani/player"
 	"fmt"
 	"log"
+	"os"
+	"os/exec"
+	"strconv"
 	"strings"
 )
 
 func HandleInput(s string) {
 
 	s = strings.Split(s, "\n")[0]
-	fmt.Println("Handling input", s)
-	log.Println("Handling input")
-
 	s = strings.ToLower(s)
 
 	if s == "" {
@@ -37,18 +38,40 @@ func HandleInput(s string) {
 func HandleCommand(command string, args []string) {
 
 	switch command {
+
+	case "clear":
+		clearScr()
+	case "ls":
+		filemanager.ListFiles()
 	case "play":
-		// play(args)
+		if len(args) == 0 {
+			player.Resume()
+			return
+		}
+		i, err := strconv.Atoi(args[0])
+		if err != nil {
+			fmt.Println("Invalid argument")
+			return
+		}
+		filemanager.GetSongByID(i).Play()
 	case "pause":
-		// pause()
+		player.Pause()
 	case "resume":
-		// resume()
+		player.Resume()
 	case "skip":
-		// skip(args)
+		log.Println("Skipping", args)
+		if len(args) == 0 {
+			player.Skip(10)
+			return
+		}
+		i, err := strconv.Atoi(args[0])
+		if err != nil {
+			fmt.Println("Invalid argument")
+			return
+		}
+		player.Skip(i)
 	case "exit":
-		// exit()
-	case "search":
-		// search(args)
+		os.Exit(0)
 	case "help":
 		// help()
 	default:
@@ -63,4 +86,26 @@ func handleSearch(s string) {
 		fmt.Printf("%3d. %s...\n", i+1, song.Name[:min(30, len(song.Name))])
 	}
 
+	var n int
+	fmt.Print("Enter your choice (0 to exit): ")
+	fmt.Scanln(&n)
+
+	for n <= 0 || n > len(res) {
+		if n == 0 {
+			return
+		}
+		fmt.Println("\rInvalid choice!!")
+		fmt.Print("Enter your choice (0 to exit): ")
+		fmt.Scanln(&n)
+	}
+
+	fmt.Println("Playing", res[n-1].Name)
+	res[n-1].Play()
+
+}
+
+func clearScr() {
+	cmd := exec.Command("clear") //Linux example, its tested
+	cmd.Stdout = os.Stdout
+	cmd.Run()
 }
