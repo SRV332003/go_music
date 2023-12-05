@@ -10,11 +10,8 @@ import (
 
 func main() {
 
-	// filemanager.Getfiles()
-	// fmt.Println(filemanager.Search("tum ho"))
-
 	bufioReader := bufio.NewReaderSize(os.Stdin, 1000)
-	cmd := exec.Command("clear") //Linux example, its tested
+	cmd := exec.Command("clear")
 	cmd.Stdout = os.Stdout
 	cmd.Run()
 	for {

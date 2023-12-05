@@ -54,11 +54,16 @@ func HandleCommand(command string, args []string) {
 			fmt.Println("Invalid argument")
 			return
 		}
-		filemanager.GetSongByID(i - 1).Play()
+		player.Play(filemanager.GetSongByID(i - 1).Path)
+
 	case "pause":
 		player.Pause()
 	case "resume":
 		player.Resume()
+	case "r":
+		song := filemanager.GetRandom()
+		fmt.Println("Playing", song.Name)
+		player.Play(song.Path)
 	case "skip":
 		log.Println("Skipping", args)
 		if len(args) == 0 {
@@ -109,7 +114,7 @@ func handleSearch(s string) {
 	if n-1 < len(res) {
 
 		fmt.Println("Playing", res[n-1].Name)
-		res[n-1].Play()
+		player.Play(res[n-1].Path)
 
 	} else {
 
@@ -118,7 +123,7 @@ func handleSearch(s string) {
 		if err != nil {
 			panic(err)
 		}
-		filemanager.AddSong(name, dest).Play()
+		player.Play(filemanager.AddSong(name, dest).Path)
 		fmt.Println("Playing", name)
 
 	}

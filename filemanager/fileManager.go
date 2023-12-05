@@ -2,34 +2,25 @@ package filemanager
 
 import (
 	// "fmt"
-	"dhvani/player"
 	"fmt"
 	"log"
+
+	"math/rand"
 	"os"
 	"path"
 	"path/filepath"
 	"strings"
 	"sync"
 
+	"dhvani/models"
+
 	"golang.org/x/term"
 )
 
-type Song struct {
-	ID   int
-	Name string
-	Path string
-}
+type Song = models.Song
 
-func (s Song) String() string {
-	return fmt.Sprintf("%3d. %30s...", s.ID+1, s.Name[:min(30, len(s.Name))])
-}
-
-func (song Song) Play() {
-
-	_, err := player.Play(song.Path)
-	if err != nil {
-		log.Println(err)
-	}
+func LenFiles() int {
+	return len(files)
 }
 
 var files []Song
@@ -113,4 +104,9 @@ func AddSong(name string, path string) Song {
 	files = append(files, s)
 	mutex.Unlock()
 	return s
+}
+
+func GetRandom() Song {
+	song := GetSongByID(rand.Intn(len(files)))
+	return song
 }

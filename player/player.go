@@ -1,7 +1,6 @@
 package player
 
 import (
-	// "log"
 	"log"
 	"os"
 	"time"
@@ -9,29 +8,27 @@ import (
 	"github.com/faiface/beep"
 	"github.com/faiface/beep/mp3"
 	"github.com/faiface/beep/speaker"
+
+	"dhvani/filemanager"
 )
 
 var streamer beep.Streamer
 var format beep.Format
 var seeker beep.StreamSeekCloser
 
-func Play(file string) (beep.Streamer, error) {
-	f, err := os.Open(file)
-	if err != nil {
-		return nil, err
-	}
+var i int
 
-	streamer, format, err = mp3.Decode(f)
-	if err != nil {
-		return nil, err
-	}
+func Play(file string) (error) {
+
+	err:=changeStream(file)
+
+	i = 1
+
 	speaker.Clear()
-
 	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
 	speaker.Play(beep.Iterate(iterator))
-	seeker = streamer.(beep.StreamSeekCloser)
-
-	return streamer, err
+	
+	return err
 }
 
 func Pause() {
@@ -45,8 +42,6 @@ func Resume() {
 
 func Skip(t int) {
 
-	// log.Println("Seeking from", seeker.Position()/format.SampleRate.N(time.Second), "to", seeker.Position()/format.SampleRate.N(time.Second)+t)
-
 	err := seeker.Seek(seeker.Position() + (t * format.SampleRate.N(time.Second)))
 	if err != nil {
 		log.Println(err)
@@ -54,7 +49,31 @@ func Skip(t int) {
 
 }
 
+func changeStream(file string) (err error) {
+
+	f, err := os.Open(file)
+	if err != nil {
+		return
+	}
+	streamer, format, err = mp3.Decode(f)
+	if err != nil {
+		return
+	}
+	seeker = streamer.(beep.StreamSeekCloser)
+	return err
+
+}
+
 func iterator() beep.Streamer {
-	seeker.Seek(0)
+
+	if i == 1 {
+		i = 0
+		return streamer
+	}
+
+	song := filemanager.GetRandom()
+	changeStream(song.Path)
+	i+=1
+
 	return streamer
 }
