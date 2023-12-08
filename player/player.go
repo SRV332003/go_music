@@ -25,8 +25,6 @@ func Play(file string) error {
 
 	i = 1
 
-	speaker.Clear()
-	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
 	speaker.Play(beep.Iterate(iterator))
 
 	return err
@@ -61,6 +59,8 @@ func changeStream(file string) (err error) {
 		return
 	}
 	seeker = streamer.(beep.StreamSeekCloser)
+	speaker.Clear()
+	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
 	return err
 
 }
