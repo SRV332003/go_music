@@ -15,10 +15,14 @@ var client youtube.Client
 
 func Getfile(url string) (string, string, error) {
 
+	// log.Println("Fetching", url)
+
 	video, err := client.GetVideo(url)
 	if err != nil {
 		return "", "", err
 	}
+	
+	// log.Println("Downloading", video.Title, video.Author)
 
 	format := video.Formats.FindByItag(140)
 

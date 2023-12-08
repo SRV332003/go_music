@@ -5,7 +5,6 @@ import (
 	"dhvani/filemanager"
 	"dhvani/player"
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"strconv"
@@ -15,7 +14,6 @@ import (
 func HandleInput(s string) {
 
 	s = strings.Split(s, "\n")[0]
-	s = strings.ToLower(s)
 
 	if s == "" {
 		fmt.Print("\b")
@@ -26,8 +24,19 @@ func HandleInput(s string) {
 
 		handleSearch(s[1:])
 
+	} else if s[0] == '~' {
+
+		name, dest, err := downloader.Getfile(s[1:])
+		if err != nil {
+			panic(err)
+		}
+
+		player.Play(filemanager.AddSong(name, dest).Path)
+		fmt.Println("Playing", name)
+
 	} else {
 
+		s = strings.ToLower(s)
 		command := strings.Split(s, " ")[0]
 		args := strings.Split(s, " ")[1:]
 		HandleCommand(command, args)
@@ -41,7 +50,7 @@ func HandleCommand(command string, args []string) {
 	switch command {
 
 	case "clear":
-		clearScr()
+		ClearScr()
 	case "ls":
 		filemanager.ListFiles()
 	case "play":
@@ -49,6 +58,7 @@ func HandleCommand(command string, args []string) {
 			player.Resume()
 			return
 		}
+
 		i, err := strconv.Atoi(args[0])
 		if err != nil {
 			fmt.Println("Invalid argument")
@@ -65,7 +75,6 @@ func HandleCommand(command string, args []string) {
 		fmt.Println("Playing", song.Name)
 		player.Play(song.Path)
 	case "skip":
-		log.Println("Skipping", args)
 		if len(args) == 0 {
 			player.Skip(10)
 			return
@@ -76,10 +85,24 @@ func HandleCommand(command string, args []string) {
 			return
 		}
 		player.Skip(i)
+
 	case "exit":
+		fmt.Println("Bye Bye! Miss You :')")
 		os.Exit(0)
 	case "help":
 		// help()
+
+	case "loop":
+		if len(args) == 0 || args[0] == "on" {
+			player.Loop(true)
+			fmt.Println("Okay, I'll repeat it :)")
+			return
+		}
+		if args[0] == "off" {
+			player.Loop(false)
+			fmt.Println("Okay, No repitions now :)")
+			return
+		}
 	default:
 		// help()
 	}
@@ -130,8 +153,8 @@ func handleSearch(s string) {
 
 }
 
-func clearScr() {
-	cmd := exec.Command("clear") //Linux example, its tested
+func ClearScr() {
+	cmd := exec.Command("clear")
 	cmd.Stdout = os.Stdout
 	cmd.Run()
 }
