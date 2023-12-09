@@ -25,6 +25,8 @@ func Play(file string) error {
 
 	i = 1
 
+	speaker.Clear()
+	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
 	speaker.Play(beep.Iterate(iterator))
 
 	return err
@@ -32,11 +34,13 @@ func Play(file string) error {
 
 func Pause() {
 	speaker.Clear()
+	i = 2
 }
 
 func Resume() {
+	// log.Println("Resuming", i)
 	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
-	speaker.Play(streamer)
+	speaker.Play(beep.Iterate(iterator))
 }
 
 func Skip(t int) {
@@ -59,23 +63,30 @@ func changeStream(file string) (err error) {
 		return
 	}
 	seeker = streamer.(beep.StreamSeekCloser)
-	speaker.Clear()
-	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
 	return err
 
 }
 
 func iterator() beep.Streamer {
 
+	// log.Println("Iterator called", i)
+
 	if i == 1 || loop {
 		i = 0
 		seeker.Seek(0)
+		// log.Println("Looping")
+		return streamer
+	} else if i == 2 {
+		i = 0
+		// log.Println("Paused restored")
 		return streamer
 	}
 
 	song := filemanager.GetRandom()
 	changeStream(song.Path)
-	i += 1
+
+	go Pause()
+	go Resume()
 
 	return streamer
 }
@@ -87,3 +98,10 @@ func init() {
 func Loop(l bool) {
 	loop = l
 }
+
+func Next() {
+	seeker.Seek(seeker.Len())
+	// log.Println(seeker.Position(), seeker.Len())
+}
+
+

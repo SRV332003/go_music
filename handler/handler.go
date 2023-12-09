@@ -103,6 +103,8 @@ func HandleCommand(command string, args []string) {
 			fmt.Println("Okay, No repitions now :)")
 			return
 		}
+	case "next":
+		player.Next()
 	default:
 		// help()
 	}
