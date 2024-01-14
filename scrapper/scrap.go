@@ -18,6 +18,8 @@ func ScrapLinks(search string) []string {
 	script = ""
 	url := getSearchURL(search)
 
+	// log.Println(url)
+
 	client.Visit(url)
 
 	mutex.Lock()
@@ -32,30 +34,24 @@ func ScrapLinks(search string) []string {
 func getSearchURL(searchStr string) string {
 
 	searchStr = strings.ReplaceAll(searchStr, " ", "+")
+
 	return "https://www.youtube.com/results?search_query=" + searchStr
 
 }
 
 func scriptScrapper(s string) []string {
 
-	re := regexp.MustCompile(`https://i.ytimg.com/vi/[A-Za-z]{11}/`)
-	match := re.FindAllStringSubmatch(s, 1000)
-
-	mp := make(map[string]int)
-
-	for _, j := range match {
-
-		mp[j[0]] = 1
-	}
+	re := regexp.MustCompile(`\{&#34;videoRenderer&#34;:\{&#34;videoId&#34;:&#34;[\-_a-zA-Z0-9]{11}`)
+	match := re.FindAllStringSubmatch(s, 10)
 
 	links := []string{}
+	for _, j := range match {
 
-	for key := range mp {
+		j[0] = "https://www.youtube.com/watch?v=" + strings.Split(j[0], ";")[5]
 
-		key = "https://www.youtube.com/watch?v=" + strings.Split(key, "/")[4]
+		// log.Println(j[0])
 
-		links = append(links, key)
-
+		links = append(links, j[0])
 	}
 
 	return links
@@ -84,6 +80,19 @@ func init() {
 		defer mutex.Unlock()
 		if len(script) <= len(data) {
 			// log.Println(len(data))
+
+			// store the script tag with the largest length in file
+			// file, err := os.Create("script.js")
+			// if err != nil {
+			// 	log.Fatal(err)
+			// }
+			// defer file.Close()
+
+			// _, err = file.WriteString(data)
+			// if err != nil {
+			// 	log.Fatal(err)
+			// }
+
 			script = data
 		}
 

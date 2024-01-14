@@ -1,0 +1,4 @@
+The project requires the pkg-config tool installed in the linux environment and libasound2 installed, basically the following commands ran.
+
+sudo apt install pkg-config
+sudo apt-get install libasound2-dev

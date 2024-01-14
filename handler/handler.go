@@ -66,10 +66,10 @@ func HandleCommand(command string, args []string) {
 		}
 		player.Play(filemanager.GetSongByID(i - 1).Path)
 
-	case "pause":
-		player.Pause()
+	case "p":
+		player.PausePlay()
 	case "resume":
-		player.Resume()
+		player.PausePlay()
 	case "r":
 		song := filemanager.GetRandom()
 		fmt.Println("Playing", song.Name)
