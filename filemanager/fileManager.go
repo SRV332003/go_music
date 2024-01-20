@@ -1,7 +1,6 @@
 package filemanager
 
 import (
-	// "fmt"
 	"fmt"
 	"log"
 
@@ -26,23 +25,58 @@ func LenFiles() int {
 var files []Song
 var mutex sync.Mutex
 
+var userDir = os.Getenv("HOME")
+var configFile = path.Join(userDir, ".config", "dhvani", "config.cnf")
+var configDir = path.Join(userDir, ".config", "dhvani")
+var MusicDir string
+
 func init() {
-	log.Println("init Ran")
 
-	userDir, err := os.UserHomeDir()
+	MusicDir = path.Join(userDir, "Music")
+	config, err := os.OpenFile(configFile, os.O_RDONLY, 0666)
+
 	if err != nil {
-		panic(err)
-	}
 
-	dirname := path.Join(userDir, "Music")
+		os.MkdirAll(configDir, 0777)
+		f, err := os.OpenFile(configFile, os.O_CREATE|os.O_WRONLY, 0666)
+
+		if err != nil {
+			panic(err)
+		}
+		defer f.Close()
+		log.Println("Config file created.")
+
+		dirname := path.Join(userDir, "Music")
+
+		n, err := f.Write([]byte(dirname))
+
+		if err != nil {
+
+			os.Remove(configFile)
+			panic(err)
+		}
+		log.Println(n, "bytes written to config file.")
+		MusicDir = dirname
+
+	} else {
+
+		b := make([]byte, 200)
+		n, err := config.Read(b)
+		if err != nil {
+			panic(err)
+		}
+		log.Println(n, "bytes read from config file. :", string(b))
+		MusicDir = string(b[:n])
+
+	}
 
 	mutex = sync.Mutex{}
 
-	err = filepath.Walk(dirname, func(path string, info os.FileInfo, err error) error {
+	err = filepath.Walk(MusicDir, func(path string, info os.FileInfo, err error) error {
 
 		if err != nil {
-			log.Println(err)
-			return nil
+			log.Println(MusicDir, "is not a valid directory.")
+			panic(err)
 		}
 
 		if !info.IsDir() && filepath.Ext(path) == ".mp3" {
@@ -54,13 +88,13 @@ func init() {
 			song.Name = strings.TrimSpace(song.Name)
 			song.Path = path
 
-			// fmt.Println(song)
+			fmt.Println(song)
 			files = append(files, song)
 			mutex.Unlock()
 		}
+
 		return nil
 	})
-
 	if err != nil {
 		panic(err)
 	}
@@ -109,4 +143,70 @@ func AddSong(name string, path string) Song {
 func GetRandom() Song {
 	song := GetSongByID(rand.Intn(len(files)))
 	return song
+}
+
+func SetMusicDir(dir string) {
+
+	if dir == MusicDir || dir == "" {
+		return
+	}
+
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		log.Println(dir, "does not exist.")
+	}
+
+	if dir == "default" {
+		dir = path.Join(userDir, "Music")
+	}
+
+	f, err := os.OpenFile(configFile, os.O_WRONLY, 0666)
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+
+	f.Truncate(0)
+
+	_, err = f.Write([]byte(dir))
+
+	if err != nil {
+		panic(err)
+	}
+	MusicDir = dir
+	refreshList()
+	return
+	// log.Println(n, "bytes written to config file.")
+}
+
+func refreshList() {
+	mutex.Lock()
+	defer mutex.Unlock()
+
+	files = files[:0]
+
+	err := filepath.Walk(MusicDir, func(path string, info os.FileInfo, err error) error {
+
+		if err != nil {
+			log.Println(MusicDir, "is not a valid directory.")
+			panic(err)
+		}
+
+		if !info.IsDir() && filepath.Ext(path) == ".mp3" {
+
+			song := Song{}
+			song.ID = len(files)
+			song.Name = strings.ReplaceAll(info.Name(), "00 - ", "")
+			song.Name = strings.TrimSpace(song.Name)
+			song.Path = path
+
+			fmt.Println(song)
+			files = append(files, song)
+		}
+
+		return nil
+	})
+	if err != nil {
+		panic(err)
+	}
+
 }

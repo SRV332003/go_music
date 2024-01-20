@@ -36,8 +36,8 @@ func HandleInput(s string) {
 
 	} else {
 
-		s = strings.ToLower(s)
 		command := strings.Split(s, " ")[0]
+		command = strings.ToLower(command)
 		args := strings.Split(s, " ")[1:]
 		HandleCommand(command, args)
 
@@ -70,6 +70,16 @@ func HandleCommand(command string, args []string) {
 		player.PausePlay()
 	case "resume":
 		player.PausePlay()
+	case "s":
+		song, err := filemanager.AdvSearch()
+		if err != nil {
+			fmt.Println("No song found")
+			return
+		}
+		player.Play(song.Path)
+		fmt.Println("Playing", song.Name)
+	case "cd":
+		filemanager.SetMusicDir(args[0])
 	case "r":
 		song := filemanager.GetRandom()
 		fmt.Println("Playing", song.Name)

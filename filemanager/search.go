@@ -1,7 +1,10 @@
 package filemanager
 
 import (
+	"fmt"
 	"strings"
+
+	"github.com/ktr0731/go-fuzzyfinder"
 )
 
 func Search(s string) []Song {
@@ -45,4 +48,18 @@ func Search(s string) []Song {
 	}
 
 	return ans
+}
+
+func AdvSearch() (Song, error) {
+
+	idx, err := fuzzyfinder.Find(files, func(i int) string {
+		return fmt.Sprintf("%s", files[i].Name)
+	})
+
+	if err != nil {
+		return Song{}, err
+	}
+
+	return files[idx], nil
+
 }
