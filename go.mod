@@ -8,7 +8,9 @@ require (
 	github.com/gocolly/colly v1.2.0
 	github.com/kkdai/youtube/v2 v2.9.0
 	github.com/ktr0731/go-fuzzyfinder v0.8.0
+	github.com/fatih/color v1.16.0
 	golang.org/x/term v0.15.0
+	github.com/eiannone/keyboard v0.0.0-20220611211555-0d226195f203
 )
 
 require (
@@ -20,8 +22,6 @@ require (
 	github.com/bitly/go-simplejson v0.5.1 // indirect
 	github.com/dlclark/regexp2 v1.10.0 // indirect
 	github.com/dop251/goja v0.0.0-20230828202809-3dbe69dd2b8e // indirect
-	github.com/eiannone/keyboard v0.0.0-20220611211555-0d226195f203 // indirect
-	github.com/fatih/color v1.16.0 // indirect
 	github.com/gdamore/encoding v1.0.0 // indirect
 	github.com/gdamore/tcell/v2 v2.6.0 // indirect
 	github.com/go-sourcemap/sourcemap v2.1.3+incompatible // indirect
