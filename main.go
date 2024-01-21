@@ -1,24 +1,40 @@
 package main
 
 import (
-	"bufio"
 	"dhvani/handler"
-	"log"
-	"os"
+	"fmt"
+
+	"github.com/eiannone/keyboard"
+	"github.com/fatih/color"
 )
 
 func main() {
 
-	bufioReader := bufio.NewReaderSize(os.Stdin, 1000)
 	handler.ClearScr()
+	fmt.Printf(color.CyanString("dhvani > "))
+
 	for {
 
-		os.Stdout.WriteString("dhvani> ")
-		str, err := bufioReader.ReadString('\n')
+		char, _, err := keyboard.GetSingleKey()
 		if err != nil {
-			log.Fatal(err)
+			panic(err)
 		}
-		handler.HandleInput(str)
+		if char == '\x00' {
+			continue
+		}
+		if char == ':' {
+
+			fmt.Printf(color.HiRedString("\rdhvani >> "))
+			handler.HandleWordInputs()
+			fmt.Printf(color.CyanString("dhvani > "))
+
+		} else {
+
+			if handler.HandleCommand(char) {
+				fmt.Printf(color.CyanString("dhvani > "))
+				continue
+			}
+		}
 	}
 
 }

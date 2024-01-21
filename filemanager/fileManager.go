@@ -153,6 +153,7 @@ func SetMusicDir(dir string) {
 
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
 		log.Println(dir, "does not exist.")
+		return
 	}
 
 	if dir == "default" {

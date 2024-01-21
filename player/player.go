@@ -106,8 +106,12 @@ func init() {
 	playing = false
 }
 
-func Loop(l bool) {
+func SetLoop(l bool) {
 	loop = l
+}
+
+func GetLoop() bool {
+	return loop
 }
 
 func Next() {
