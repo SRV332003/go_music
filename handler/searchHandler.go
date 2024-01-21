@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"dhvani/downloader"
-	"dhvani/filemanager"
-	"dhvani/player"
 	"fmt"
+	"go_music/downloader"
+	"go_music/filemanager"
+	"go_music/player"
 )
 
 func handleSearch(s string) {

@@ -11,7 +11,7 @@ import (
 	"strings"
 	"sync"
 
-	"dhvani/models"
+	"go_music/models"
 
 	"golang.org/x/term"
 )

@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"dhvani/downloader"
-	"dhvani/filemanager"
-	"dhvani/player"
 	"fmt"
+	"go_music/downloader"
+	"go_music/filemanager"
+	"go_music/player"
 	"strings"
 )
 
@@ -15,20 +15,21 @@ func HandleWordCommands(s string) {
 		return
 	}
 
-	switch s[0] {
-
-	case ':':
+	if s[0] == ':' {
 		handleSearch(s[1:])
-	case '~':
+
+	} else if s[0] == '~' {
+
 		name, dest, err := downloader.Getfile(s[1:])
 		if err != nil {
 			panic(err)
 		}
 		player.Play(filemanager.AddSong(name, dest))
 
-	default:
+	} else {
 		command := strings.Split(s, " ")[0]
 		command = strings.ToLower(command)
+		command = strings.TrimSpace(command)
 		args := strings.Split(s, " ")[1:]
 
 		switch command {
@@ -37,12 +38,11 @@ func HandleWordCommands(s string) {
 			lsHandler(args)
 		case "play":
 			playHandler(args)
-		case "resume":
-			pausePlayHandler(args)
 		case "cd":
 			cdHandler(args)
 		case "skip":
 			skipHandler(args)
+
 		}
 	}
 

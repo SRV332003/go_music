@@ -36,7 +36,8 @@ func HandleCommand(command rune) (success bool) {
 		fmt.Printf("%c\n", command)
 		nextHandler(args)
 	case 'h':
-		// help()
+		fmt.Printf("%c\n", command)
+		help()
 	default:
 		success = false
 	}

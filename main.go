@@ -1,8 +1,8 @@
 package main
 
 import (
-	"dhvani/handler"
 	"fmt"
+	"go_music/handler"
 
 	"github.com/eiannone/keyboard"
 	"github.com/fatih/color"

@@ -1,4 +1,4 @@
-module dhvani
+module go_music
 
 go 1.21.5
 

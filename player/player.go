@@ -10,8 +10,8 @@ import (
 	"github.com/faiface/beep/mp3"
 	"github.com/faiface/beep/speaker"
 
-	"dhvani/filemanager"
-	"dhvani/recom"
+	"go_music/filemanager"
+	"go_music/recom"
 )
 
 var streamer beep.Streamer
@@ -32,7 +32,7 @@ func Play(song filemanager.Song) error {
 	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
 	speaker.Play(beep.Iterate(iterator))
 
-	fmt.Println("Playing", song.Name)
+	fmt.Println("Playing", song.ID, "\b..", song.Name)
 
 	playing = true
 

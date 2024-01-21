@@ -1,8 +1,8 @@
 package downloader
 
 import (
-	"dhvani/scrapper"
 	"fmt"
+	"go_music/scrapper"
 	"log"
 	"os"
 	"path"
@@ -21,7 +21,7 @@ func Getfile(url string) (string, string, error) {
 	if err != nil {
 		return "", "", err
 	}
-	
+
 	// log.Println("Downloading", video.Title, video.Author)
 
 	format := video.Formats.FindByItag(140)

@@ -1,11 +1,13 @@
 package handler
 
 import (
-	"dhvani/filemanager"
-	"dhvani/player"
 	"fmt"
+	"go_music/filemanager"
+	"go_music/player"
 	"os"
 	"os/exec"
+
+	"github.com/eiannone/keyboard"
 
 	"strconv"
 )
@@ -94,4 +96,32 @@ func ClearScr() {
 	cmd := exec.Command("clear")
 	cmd.Stdout = os.Stdout
 	cmd.Run()
+}
+
+func help() {
+	ClearScr()
+	fmt.Printf(`For basic usage you can refer the following commands:
+
+r -> random song in home music directory ~/Music
+l -> toggle the loop
+n -> next song
+s -> search and play song in music directory
+p -> toggle play, pause
+e -> exit the player
+c -> clear the terminal
+h -> show help commands
+: -> allows to write word commands.
+
+Words commands:
+
+cd <full-directory-path> --> changes the music directory and reloads the files
+: <song-name>            --> show search results of youtube and allow playing/downloading from the results
+~ <youtube-song-link>    --> download the audio of the link in music directory and play
+skip <second>            --> skip the current song by given seconds (default = 10sec)
+ls                       --> shows all songs in music directory with ids
+play <id>                --> play the song with given id
+
+Press any key to continue...`)
+	keyboard.GetSingleKey()
+	ClearScr()
 }
