@@ -24,8 +24,7 @@ func HandleWordCommands(s string) {
 		if err != nil {
 			panic(err)
 		}
-		player.Play(filemanager.AddSong(name, dest).Path)
-		fmt.Println("Playing", name)
+		player.Play(filemanager.AddSong(name, dest))
 
 	default:
 		command := strings.Split(s, " ")[0]

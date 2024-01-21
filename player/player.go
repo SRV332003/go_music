@@ -1,6 +1,7 @@
 package player
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"time"
@@ -10,6 +11,7 @@ import (
 	"github.com/faiface/beep/speaker"
 
 	"dhvani/filemanager"
+	"dhvani/recom"
 )
 
 var streamer beep.Streamer
@@ -20,15 +22,17 @@ var playing bool
 
 var i int
 
-func Play(file string) error {
+func Play(song filemanager.Song) error {
 
-	err := changeStream(file)
+	err := changeStream(song.Path)
 
 	i = 1
 
 	speaker.Clear()
 	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
 	speaker.Play(beep.Iterate(iterator))
+
+	fmt.Println("Playing", song.Name)
 
 	playing = true
 
@@ -92,7 +96,7 @@ func iterator() beep.Streamer {
 		return streamer
 	}
 
-	song := filemanager.GetRandom()
+	song := recom.PlayRandom()
 	changeStream(song.Path)
 
 	go PausePlay()

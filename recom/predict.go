@@ -2,10 +2,9 @@ package recom
 
 import (
 	"dhvani/filemanager"
-	"dhvani/player"
 )
 
-func PlayRandom() {
+func PlayRandom() filemanager.Song {
 	song := filemanager.GetRandom()
-	player.Play(song.Path)
+	return song
 }

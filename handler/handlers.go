@@ -46,7 +46,7 @@ func playHandler(args []string) {
 		fmt.Println("Invalid argument")
 		return
 	}
-	player.Play(filemanager.GetSongByID(i - 1).Path)
+	player.Play(filemanager.GetSongByID(i - 1))
 
 }
 
@@ -56,14 +56,12 @@ func advSearchHandler(args []string) {
 		fmt.Println("No song found")
 		return
 	}
-	player.Play(song.Path)
-	fmt.Println("Playing", song.Name)
+	player.Play(song)
 }
 
 func randomSongHandler(args []string) {
 	song := filemanager.GetRandom()
-	fmt.Println("Playing", song.Name)
-	player.Play(song.Path)
+	player.Play(song)
 }
 
 func exitHandler(args []string) {

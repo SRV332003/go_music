@@ -36,7 +36,7 @@ func handleSearch(s string) {
 	if n-1 < len(res) {
 
 		fmt.Println("Playing", res[n-1].Name)
-		player.Play(res[n-1].Path)
+		player.Play(res[n-1])
 
 	} else {
 
@@ -45,7 +45,7 @@ func handleSearch(s string) {
 		if err != nil {
 			panic(err)
 		}
-		player.Play(filemanager.AddSong(name, dest).Path)
+		player.Play(filemanager.AddSong(name, dest))
 		fmt.Println("Playing", name)
 
 	}
