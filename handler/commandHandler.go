@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 )
 
 func HandleCommand(command rune) (success bool) {
@@ -50,6 +51,11 @@ func HandleWordInputs() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	str = str[:len(str)-1]
+	str = strings.TrimSpace(str)
+	str = strings.Split(str, "\\")[0]
+	log.Println(str)
 
 	HandleWordCommands(str)
 
