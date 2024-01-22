@@ -25,7 +25,7 @@ func LenFiles() int {
 var files []Song
 var mutex sync.Mutex
 
-var userDir = os.Getenv("HOME")
+var userDir, _ = os.UserHomeDir()
 var configFile = path.Join(userDir, ".config", "dhvani", "config.cnf")
 var configDir = path.Join(userDir, ".config", "dhvani")
 var MusicDir string

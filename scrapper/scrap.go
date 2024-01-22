@@ -20,7 +20,11 @@ func ScrapLinks(search string) []string {
 
 	// log.Println(url)
 
-	client.Visit(url)
+	err := client.Visit(url)
+	if err != nil {
+		log.Fatal(err)
+		return []string{}
+	}
 
 	mutex.Lock()
 	strings := scriptScrapper(script)

@@ -64,7 +64,8 @@ func FetchSearch(searchStr string) [][]string {
 	for i := range links {
 		video, err := client.GetVideo(links[i])
 		if err != nil {
-			panic(err)
+			log.Println(err)
+			return names
 		}
 		names = append(names, []string{links[i], video.Title, video.Author})
 	}
