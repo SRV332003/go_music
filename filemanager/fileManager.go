@@ -141,6 +141,9 @@ func AddSong(name string, path string) Song {
 }
 
 func GetRandom() Song {
+	if len(files) == 0 {
+		return Song{}
+	}
 	song := GetSongByID(rand.Intn(len(files)))
 	return song
 }
