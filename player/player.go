@@ -43,7 +43,7 @@ func Play(song filemanager.Song) error {
 	ChangeVolume(0)
 
 	fmt.Println("Playing", song.ID, "\b..", song.Name)
-	filemanager.UpdateUsage(song)
+	// filemanager.UpdateUsage(song)
 
 	playing = true
 
