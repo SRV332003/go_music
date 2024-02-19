@@ -29,7 +29,7 @@ func Play(song filemanager.Song) error {
 
 	if song.ID == 0 {
 		fmt.Println("Song not found")
-		return fmt.Errorf("Song not found")
+		return fmt.Errorf("song not found")
 	}
 
 	err := changeStream(song.Path)

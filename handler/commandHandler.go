@@ -6,12 +6,37 @@ import (
 	"log"
 	"os"
 	"strings"
+
+	"github.com/eiannone/keyboard"
 )
 
-func HandleCommand(command rune) (success bool) {
+func HandleCommand(command rune, key keyboard.Key) (success bool) {
 	args := []string{}
 
 	success = true
+
+	switch key {
+	case keyboard.KeyArrowRight:
+		args = append(args, "10")
+		skipHandler(args)
+		success = false
+	case keyboard.KeyArrowLeft:
+		args = append(args, "-10")
+		skipHandler(args)
+		success = false
+	case keyboard.KeyArrowUp:
+		volumeUpHandler(args)
+		success = false
+	case keyboard.KeyArrowDown:
+		volumeDownHandler(args)
+		success = false
+	case keyboard.KeySpace:
+		pausePlayHandler(args)
+		success = false
+	}
+	if !success {
+		return
+	}
 
 	switch command {
 

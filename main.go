@@ -15,13 +15,11 @@ func main() {
 
 	for {
 
-		char, _, err := keyboard.GetSingleKey()
+		char, key, err := keyboard.GetSingleKey()
 		if err != nil {
 			panic(err)
 		}
-		if char == '\x00' {
-			continue
-		}
+
 		if char == ':' {
 
 			fmt.Printf(color.HiRedString("\rdhvani >> "))
@@ -30,7 +28,7 @@ func main() {
 
 		} else {
 
-			if handler.HandleCommand(char) {
+			if handler.HandleCommand(char, key) {
 				fmt.Printf(color.CyanString("dhvani > "))
 				continue
 			} else {
