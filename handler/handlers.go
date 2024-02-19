@@ -98,6 +98,14 @@ func ClearScr() {
 	cmd.Run()
 }
 
+func volumeUpHandler(args []string) {
+	player.ChangeVolume(1)
+}
+
+func volumeDownHandler(args []string) {
+	player.ChangeVolume(-1)
+}
+
 func help() {
 	ClearScr()
 	fmt.Printf(`For basic usage you can refer the following commands:

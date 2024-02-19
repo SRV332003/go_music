@@ -33,6 +33,8 @@ func main() {
 			if handler.HandleCommand(char) {
 				fmt.Printf(color.CyanString("dhvani > "))
 				continue
+			} else {
+				fmt.Printf(color.CyanString("\rdhvani > "))
 			}
 		}
 	}

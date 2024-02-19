@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/faiface/beep"
+	"github.com/faiface/beep/effects"
 	"github.com/faiface/beep/mp3"
 	"github.com/faiface/beep/speaker"
 
@@ -19,6 +20,8 @@ var format beep.Format
 var seeker beep.StreamSeekCloser
 var loop bool
 var playing bool
+
+var volume = 0
 
 var i int
 
@@ -37,7 +40,10 @@ func Play(song filemanager.Song) error {
 	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
 	speaker.Play(beep.Iterate(iterator))
 
+	ChangeVolume(0)
+
 	fmt.Println("Playing", song.ID, "\b..", song.Name)
+	filemanager.UpdateUsage(song)
 
 	playing = true
 
@@ -103,6 +109,8 @@ func iterator() beep.Streamer {
 
 	song := recom.PlayRandom()
 	changeStream(song.Path)
+	fmt.Print("\rPlaying", song)
+	fmt.Print("\ndhvani > ")
 
 	go PausePlay()
 	go Resume()
@@ -126,4 +134,30 @@ func GetLoop() bool {
 func Next() {
 	seeker.Seek(seeker.Len())
 	// log.Println(seeker.Position(), seeker.Len())
+}
+
+func ChangeVolume(n int) {
+	speaker.Lock()
+
+	volume = volume + n
+	if volume < -10 {
+		volume = -10
+	}
+
+	if volume > 0 {
+		volume = 0
+	}
+	i = 2
+
+	ctrl := &beep.Ctrl{Streamer: beep.Iterate(iterator), Paused: false}
+	volume := &effects.Volume{
+		Streamer: ctrl,
+		Base:     2,
+		Volume:   float64(volume),
+		Silent:   false,
+	}
+	speaker.Unlock()
+	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
+	speaker.Play(volume)
+
 }

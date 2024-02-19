@@ -39,6 +39,14 @@ func HandleCommand(command rune) (success bool) {
 	case 'h':
 		fmt.Printf("%c\n", command)
 		help()
+	case '+':
+		// fmt.Printf("%c\n", command)
+		volumeUpHandler(args)
+		success = false
+	case '-':
+		// fmt.Printf("%c\n", command)
+		volumeDownHandler(args)
+		success = false
 	default:
 		success = false
 	}
