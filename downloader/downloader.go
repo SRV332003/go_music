@@ -24,9 +24,9 @@ func Getfile(url string) (string, string, error) {
 
 	// log.Println("Downloading", video.Title, video.Author)
 
-	format := video.Formats.FindByItag(140)
+	format := video.Formats.Itag(140)[0]
 
-	stream, _, err := client.GetStream(video, format)
+	stream, _, err := client.GetStream(video, &format)
 	if err != nil {
 		return "", "", err
 	}
@@ -57,14 +57,18 @@ func Getfile(url string) (string, string, error) {
 
 func FetchSearch(searchStr string) [][]string {
 
+	// log.Println("Searching for", searchStr)
 	links := scrapper.ScrapLinks(searchStr)
+
+	log.Println("Found", links)
 
 	names := [][]string{}
 
 	for i := range links {
 		video, err := client.GetVideo(links[i])
 		if err != nil {
-			log.Println(err)
+
+			log.Panic("Downloader:", err)
 			return names
 		}
 		names = append(names, []string{links[i], video.Title, video.Author})
