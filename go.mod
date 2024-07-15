@@ -10,6 +10,8 @@ require (
 	github.com/gocolly/colly v1.2.0
 	github.com/kkdai/youtube/v2 v2.10.1
 	github.com/ktr0731/go-fuzzyfinder v0.8.0
+	github.com/ossrs/go-oryx-lib v0.0.10
+	github.com/viert/lame v0.0.0-20190823071122-49a063e7d5e6
 	golang.org/x/term v0.18.0
 )
 
@@ -30,7 +32,7 @@ require (
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/pprof v0.0.0-20240227163752-401108e1b7e7 // indirect
-	github.com/hajimehoshi/go-mp3 v0.3.0 // indirect
+	github.com/hajimehoshi/go-mp3 v0.3.4 // indirect
 	github.com/hajimehoshi/oto v0.7.1 // indirect
 	github.com/kennygrant/sanitize v1.2.4 // indirect
 	github.com/ktr0731/go-ansisgr v0.1.0 // indirect
@@ -44,7 +46,7 @@ require (
 	github.com/saintfish/chardet v0.0.0-20230101081208-5e3ef4b5456d // indirect
 	github.com/temoto/robotstxt v1.1.2 // indirect
 	github.com/tink-ab/tempfile v0.0.0-20180226111222-33beb0518f1a // indirect
-	golang.org/x/exp/shiny v0.0.0-20240404231335-c0f41cb1a7a0 // indirect
+	golang.org/x/exp/shiny v0.0.0-20240707233637-46b078467d37 // indirect
 	golang.org/x/image v0.14.0 // indirect
 	golang.org/x/mobile v0.0.0-20231127183840-76ac6878050a // indirect
 	golang.org/x/net v0.22.0 // indirect
