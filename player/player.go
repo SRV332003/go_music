@@ -70,8 +70,9 @@ func Resume() {
 }
 
 func Skip(t int) {
-
-	err := seeker.Seek(seeker.Position() + (t * format.SampleRate.N(time.Second)))
+	targetSeek := min(seeker.Len()-1, seeker.Position()+(t*format.SampleRate.N(time.Second)))
+	// log.Println(targetSeek, seeker.Len(), seeker.Position()+t*format.SampleRate.N(time.Second))
+	err := seeker.Seek(targetSeek)
 	if err != nil {
 		log.Println(err)
 	}
