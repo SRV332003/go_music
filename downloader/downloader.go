@@ -65,13 +65,15 @@ func FetchSearch(searchStr string) [][]string {
 	names := [][]string{}
 
 	for i := range links {
+
 		video, err := client.GetVideo(links[i])
 		if err != nil {
+			names = append(names, []string{links[i], "Error", err.Error()})
+			client = youtube.Client{}
+		} else {
+			names = append(names, []string{links[i], video.Title, video.Author})
 
-			log.Panic("Downloader:", err)
-			return names
 		}
-		names = append(names, []string{links[i], video.Title, video.Author})
 	}
 
 	return names
