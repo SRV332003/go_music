@@ -10,6 +10,7 @@ import (
 	"github.com/faiface/beep/effects"
 	"github.com/faiface/beep/mp3"
 	"github.com/faiface/beep/speaker"
+	"github.com/fatih/color"
 
 	"go_music/filemanager"
 	"go_music/recom"
@@ -19,7 +20,6 @@ var streamer beep.Streamer
 var format beep.Format
 var seeker beep.StreamSeekCloser
 var loop bool
-var playing bool
 var ctrl *beep.Ctrl
 
 var volume = 0
@@ -45,8 +45,6 @@ func Play(song filemanager.Song) error {
 
 	fmt.Println("Playing", song.ID, "\b..", song.Name)
 	// filemanager.UpdateUsage(song)
-
-	playing = true
 
 	return err
 }
@@ -113,18 +111,14 @@ func iterator() beep.Streamer {
 
 	song := recom.PlayRandom()
 	changeStream(song.Path)
-	fmt.Print("\rPlaying", song)
-	fmt.Print("\ndhvani > ")
-
-	go PausePlay()
-	go Resume()
+	fmt.Println("\rPlaying", song)
+	fmt.Print(color.CyanString("dhvani > "))
 
 	return streamer
 }
 
 func init() {
 	loop = true
-	playing = false
 }
 
 func SetLoop(l bool) {
