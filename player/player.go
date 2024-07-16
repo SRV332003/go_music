@@ -20,6 +20,7 @@ var format beep.Format
 var seeker beep.StreamSeekCloser
 var loop bool
 var playing bool
+var ctrl *beep.Ctrl
 
 var volume = 0
 
@@ -51,16 +52,13 @@ func Play(song filemanager.Song) error {
 }
 
 func PausePlay() {
-
-	if playing {
-		speaker.Clear()
-		i = 2
-		playing = false
+	speaker.Lock()
+	if ctrl.Paused {
+		ctrl.Paused = false
 	} else {
-		speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
-		speaker.Play(beep.Iterate(iterator))
-		playing = true
+		ctrl.Paused = true
 	}
+	speaker.Unlock()
 }
 
 func Resume() {
@@ -70,6 +68,7 @@ func Resume() {
 }
 
 func Skip(t int) {
+	// log.Println("Skipping", t)
 	speaker.Lock()
 	targetSeek := min(seeker.Len()-1, seeker.Position()+(t*format.SampleRate.N(time.Second)))
 	targetSeek = max(0, targetSeek)
@@ -93,6 +92,7 @@ func changeStream(file string) (err error) {
 		return
 	}
 	seeker = streamer.(beep.StreamSeekCloser)
+	ctrl = &beep.Ctrl{Streamer: beep.Iterate(iterator), Paused: false}
 	return err
 
 }
@@ -153,7 +153,6 @@ func ChangeVolume(n int) {
 	}
 	i = 2
 
-	ctrl := &beep.Ctrl{Streamer: beep.Iterate(iterator), Paused: false}
 	volume := &effects.Volume{
 		Streamer: ctrl,
 		Base:     2,
