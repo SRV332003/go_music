@@ -2,6 +2,11 @@
 
 This project targets building of a commandline music player that is able to download songs from youtube by providing a search interface in CLI itself. It can be used by various programmers while coding in their IDE. Folks will be able to play music in the terminal of IDE.
 
+## Dependencies
+The project relies on the following dependencies:
+- [`ffmpeg`](https://ffmpeg.org/download.html): This is required to download the songs from youtube. You can download it from the link provided.
+
+Above dependencies are required to be installed in the system to run the project.
 
 ## Install and Use
 ### Using `go` command
