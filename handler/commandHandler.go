@@ -52,7 +52,7 @@ func HandleCommand(command rune, key keyboard.Key) (success bool) {
 	case 'r':
 		fmt.Printf("%c\n", command)
 		randomSongHandler(args)
-	case 'e':
+	case 'q':
 		fmt.Printf("%c\n", command)
 		exitHandler(args)
 	case 'l':
