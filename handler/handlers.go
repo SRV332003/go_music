@@ -39,7 +39,7 @@ func skipHandler(args []string) {
 
 func playHandler(args []string) {
 	if len(args) == 0 {
-		player.Resume()
+		player.PausePlay()
 		return
 	}
 
@@ -99,11 +99,11 @@ func ClearScr() {
 }
 
 func volumeUpHandler(args []string) {
-	player.ChangeVolume(1)
+	player.ChangeVolume(0.5)
 }
 
 func volumeDownHandler(args []string) {
-	player.ChangeVolume(-1)
+	player.ChangeVolume(-0.5)
 }
 
 func help() {

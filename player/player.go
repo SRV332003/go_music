@@ -6,11 +6,11 @@ import (
 	"os"
 	"time"
 
-	"github.com/faiface/beep"
-	"github.com/faiface/beep/effects"
-	"github.com/faiface/beep/mp3"
-	"github.com/faiface/beep/speaker"
 	"github.com/fatih/color"
+	"github.com/gopxl/beep"
+	"github.com/gopxl/beep/effects"
+	"github.com/gopxl/beep/mp3"
+	"github.com/gopxl/beep/speaker"
 
 	"go_music/filemanager"
 	"go_music/recom"
@@ -20,9 +20,8 @@ var streamer beep.Streamer
 var format beep.Format
 var seeker beep.StreamSeekCloser
 var loop bool
+var volume *effects.Volume
 var ctrl *beep.Ctrl
-
-var volume = 0
 
 var i int
 
@@ -39,7 +38,7 @@ func Play(song filemanager.Song) error {
 
 	speaker.Clear()
 	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
-	speaker.Play(beep.Iterate(iterator))
+	speaker.Play(volume)
 
 	ChangeVolume(0)
 
@@ -57,12 +56,6 @@ func PausePlay() {
 		ctrl.Paused = true
 	}
 	speaker.Unlock()
-}
-
-func Resume() {
-	// log.Println("Resuming", i)
-	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
-	speaker.Play(beep.Iterate(iterator))
 }
 
 func Skip(t int) {
@@ -91,6 +84,16 @@ func changeStream(file string) (err error) {
 	}
 	seeker = streamer.(beep.StreamSeekCloser)
 	ctrl = &beep.Ctrl{Streamer: beep.Iterate(iterator), Paused: false}
+	prevVolume := 0.0
+	if volume != nil {
+		prevVolume = volume.Volume
+	}
+	volume = &effects.Volume{
+		Streamer: ctrl,
+		Base:     2,
+		Volume:   float64(prevVolume),
+		Silent:   false,
+	}
 	return err
 
 }
@@ -134,27 +137,18 @@ func Next() {
 	// log.Println(seeker.Position(), seeker.Len())
 }
 
-func ChangeVolume(n int) {
+func ChangeVolume(n float64) {
+	// log.Println("Changing volume to", volume.Volume+n)
+	if volume.Volume+n >= 1 {
+		// log.Println("Volume too high")
+		n = 0
+	}
+	if volume.Volume+n < -6 {
+		// log.Println("Volume too low")
+		n = 0
+	}
 	speaker.Lock()
-
-	volume = volume + n
-	if volume < -10 {
-		volume = -10
-	}
-
-	if volume > 0 {
-		volume = 0
-	}
-	i = 2
-
-	volume := &effects.Volume{
-		Streamer: ctrl,
-		Base:     2,
-		Volume:   float64(volume),
-		Silent:   false,
-	}
+	volume.Volume += float64(n)
 	speaker.Unlock()
-	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
-	speaker.Play(volume)
 
 }
