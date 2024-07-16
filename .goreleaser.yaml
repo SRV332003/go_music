@@ -12,8 +12,6 @@ before:
   hooks:
     - go mod tidy
 
-env_files:
-  github_token: github-token.env
 
 
 builds:
@@ -43,13 +41,27 @@ archives:
         format: zip
 
 release:
-  prerelease: auto
+  prerelease: false
 
 checksum:
   name_template: 'checksums.txt'
 
 snapshot:
   name_template: '{{ incpatch .Version }}-next'
+
+nfpms:
+  - package_name: go_music
+    homepage: https://github.com/SRV332003/go_music/
+    maintainer: Sourav <srvgarg332003@gmail.com>
+    description: |-
+            A perfect music companion for you and your Terminal.🔥🔥
+    formats:
+      - rpm
+      - deb
+
+sboms:
+  - artifacts: archive
+    
 
 changelog:
   sort: asc
