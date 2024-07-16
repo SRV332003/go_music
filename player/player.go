@@ -70,12 +70,15 @@ func Resume() {
 }
 
 func Skip(t int) {
+	speaker.Lock()
 	targetSeek := min(seeker.Len()-1, seeker.Position()+(t*format.SampleRate.N(time.Second)))
+	targetSeek = max(0, targetSeek)
 	// log.Println(targetSeek, seeker.Len(), seeker.Position()+t*format.SampleRate.N(time.Second))
 	err := seeker.Seek(targetSeek)
 	if err != nil {
 		log.Println(err)
 	}
+	speaker.Unlock()
 
 }
 
