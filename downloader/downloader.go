@@ -2,7 +2,7 @@ package downloader
 
 import (
 	"fmt"
-	"go_music/scrapper"
+	"github.com/SRV332003/go_music/scrapper"
 	"log"
 	"os"
 	"path"

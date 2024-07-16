@@ -11,7 +11,7 @@ import (
 	"strings"
 	"sync"
 
-	"go_music/models"
+	"github.com/SRV332003/go_music/models"
 
 	"golang.org/x/term"
 )

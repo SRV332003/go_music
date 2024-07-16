@@ -1,4 +1,4 @@
-module go_music
+module github.com/SRV332003/go_music
 
 go 1.21.5
 

@@ -2,8 +2,8 @@ package handler
 
 import (
 	"fmt"
-	"go_music/filemanager"
-	"go_music/player"
+	"github.com/SRV332003/go_music/filemanager"
+	"github.com/SRV332003/go_music/player"
 	"os"
 	"os/exec"
 

@@ -12,8 +12,8 @@ import (
 	"github.com/gopxl/beep/mp3"
 	"github.com/gopxl/beep/speaker"
 
-	"go_music/filemanager"
-	"go_music/recom"
+	"github.com/SRV332003/go_music/filemanager"
+	"github.com/SRV332003/go_music/recom"
 )
 
 var streamer beep.Streamer

@@ -1,7 +1,7 @@
 package recom
 
 import (
-	"go_music/filemanager"
+	"github.com/SRV332003/go_music/filemanager"
 )
 
 func PlayRandom() filemanager.Song {

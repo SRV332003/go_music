@@ -2,9 +2,9 @@ package handler
 
 import (
 	"fmt"
-	"go_music/downloader"
-	"go_music/filemanager"
-	"go_music/player"
+	"github.com/SRV332003/go_music/downloader"
+	"github.com/SRV332003/go_music/filemanager"
+	"github.com/SRV332003/go_music/player"
 	"strings"
 )
 

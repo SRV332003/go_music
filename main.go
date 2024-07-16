@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-	"go_music/handler"
+
+	"github.com/SRV332003/go_music/handler"
 
 	"github.com/eiannone/keyboard"
 	"github.com/fatih/color"
