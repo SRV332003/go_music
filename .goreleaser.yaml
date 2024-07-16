@@ -6,21 +6,29 @@
 # yaml-language-server: $schema=https://goreleaser.com/static/schema.json
 # vim: set ts=2 sw=2 tw=0 fo=cnqoj
 
-version: 1
+version: 2
+
+before:
+  hooks:
+    - go mod tidy
+
+env_files:
+  github_token: github-token.env
+
 
 builds:
   - env:
-      - CGO_ENABLED=0
+      - CGO_ENABLED=1
     goos:
-      # - linux
+      - linux
       - windows
-
+      # - darwin
     goarch:
       - amd64
-      - arm64
+      # - 386
 
 archives:
-  - format: tar.gzs
+  - format: tar.gz
     # this name template makes the OS and Arch compatible with the results of `uname`.
     name_template: >-
       {{ .ProjectName }}_
@@ -34,9 +42,18 @@ archives:
       - goos: windows
         format: zip
 
+release:
+  prerelease: auto
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  name_template: '{{ incpatch .Version }}-next'
+
 changelog:
   sort: asc
   filters:
     exclude:
-      - "^docs:"
-      - "^test:"
+      - '^docs:'
+      - '^test:'
