@@ -115,7 +115,7 @@ l -> toggle the loop
 n -> next song
 s -> search and play song in music directory
 p -> toggle play, pause
-e -> exit the player
+q -> exit the player
 c -> clear the terminal
 h -> show help commands
 : -> allows to write word commands.
