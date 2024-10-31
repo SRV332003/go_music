@@ -42,6 +42,9 @@ archives:
 
 release:
   prerelease: false
+  github:
+    owner: srv332003
+    name: go_music
 
 checksum:
   name_template: 'checksums.txt'
@@ -69,3 +72,11 @@ changelog:
     exclude:
       - '^docs:'
       - '^test:'
+  
+brews:
+    - name: go_music
+      commit_author:
+        name: srv332003
+        email: srvgarg332003@gmail.com
+      homepage: https://github.com/srv332003/go_music
+      description: A perfect music companion for you and your Terminal.🔥🔥
