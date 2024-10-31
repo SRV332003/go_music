@@ -18,12 +18,13 @@ builds:
   - env:
       - CGO_ENABLED=1
     goos:
-      - linux
-      - windows
-      # - darwin
+      # - linux
+      # - windows
+      - darwin
     goarch:
-      - amd64
+      # - amd64
       # - 386
+      - arm64
 
 archives:
   - format: tar.gz
