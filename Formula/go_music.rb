@@ -13,7 +13,7 @@ class GoMusic < Formula
 
   on_arm do
     url "https://github.com/SRV332003/go_music/releases/download/v1.0.5/go_music_Darwin_arm64.tar.gz"
-    sha256 "0ef00e7dd82302a593c6545833474987c22561a6bc7afbea89eb4d958e41c0db"
+    sha256 "8befd02f97da8ee9872f113b60fc1a0e7e653cb57ff1b574b111377f287b5cff"
 
     def install
       bin.install "go_music"
