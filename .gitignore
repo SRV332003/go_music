@@ -3,3 +3,4 @@ go_music.exe
 builds
 dist/
 *.env
+.goreleaser.yaml
