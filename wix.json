@@ -1,0 +1,32 @@
+{
+  "product": "GoMusic",
+  "company": "SRV332003",
+  "license": "LICENSE",
+  "upgrade-code": "385eb0aa-5cbb-45d8-bf1f-33325e2b3c79",
+  "files": {
+    "guid": "85138470-b017-4b17-9fb2-6eaca51a9f69",
+    "items": [
+      "dist/msi.exe"
+    ]
+  },
+  "env": {
+    "guid": "474237e0-f254-4483-bc35-7100984bfdef",
+    "vars": [
+      {
+        "name": "PATH",
+        "value": "[INSTALLDIR]",
+        "permanent": "no",
+        "system": "no",
+        "action": "set",
+        "part": "last"
+      }
+    ]
+  },
+  "shortcuts": {},
+  "choco": {
+    "description": "A perfect music companion for you and your Terminal.🔥🔥",
+    "project-url": "https://github.com/SRV332003/go_music",
+    "tags": "MUSIC YOUTUBE DOWNLOADER",
+    "license-url": "https://raw.githubusercontent.com/SRV332003/go_music/refs/heads/main/LICENSE"
+  }
+}
