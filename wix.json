@@ -22,7 +22,18 @@
       }
     ]
   },
-  "shortcuts": {},
+  "shortcuts": {
+    "guid": "",
+    "items": [
+      {
+        "name": "Go Music",
+        "description": "A perfect music companion for you and your Terminal.🔥🔥",
+        "target": "[INSTALLDIR]\\go_music.exe",
+        "wdir": "INSTALLDIR",
+        "icon":"icon.ico"
+      }
+    ]
+  },
   "choco": {
     "description": "A perfect music companion for you and your Terminal.🔥🔥",
     "project-url": "https://github.com/SRV332003/go_music",
