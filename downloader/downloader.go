@@ -3,6 +3,7 @@ package downloader
 import (
 	"fmt"
 	"go_music/scrapper"
+	"io"
 	"log"
 	"os"
 	"path"
@@ -19,22 +20,37 @@ func Getfile(url string) (string, string, error) {
 
 	video, err := client.GetVideo(url)
 	if err != nil {
+		log.Println("Error fetching video", err)
 		return "", "", err
 	}
 
-	// log.Println("Downloading", video.Title, video.Author)
+	format := video.Formats.Type("audio").Itag(140)[0]
+	log.Print("Fprmat", format)
 
-	format := video.Formats.Itag(140)[0]
+	stream, n, err := client.GetStream(video, &format)
+	if err != nil {
+		log.Panic(err)
+		return "", "", err
+	}
+	log.Print("Stream", stream)
+	log.Println("Downloading ", n, "bytes")
 
-	stream, _, err := client.GetStream(video, &format)
+	_, err = io.ReadAll(stream)
+	if err != nil {
+		log.Println("Error reading stream", err)
+		return "", "", err
+	}
+
+	segment, err := godub.NewLoader().Load(stream)
 	if err != nil {
 		return "", "", err
 	}
-	segment, _ := godub.NewLoader().Load(stream)
+	log.Println("Downloading", video.Title, video.Author)
 
 	name := fmt.Sprintf("%s.mp3", video.Title)
 	dirname, err := os.UserHomeDir()
 	if err != nil {
+
 		return "", "", err
 	}
 	fileDestination := path.Join(dirname, "Music", name)
@@ -47,6 +63,7 @@ func Getfile(url string) (string, string, error) {
 		Export(segment)
 
 	if err != nil {
+
 		return "", "", err
 	}
 
@@ -67,9 +84,8 @@ func FetchSearch(searchStr string) [][]string {
 	for i := range links {
 		video, err := client.GetVideo(links[i])
 		if err != nil {
-
-			log.Panic("Downloader:", err)
-			return names
+			names = append(names, []string{links[i], "Error :", err.Error()[0:25]})
+			continue
 		}
 		names = append(names, []string{links[i], video.Title, video.Author})
 	}

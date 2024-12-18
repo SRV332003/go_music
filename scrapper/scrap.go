@@ -18,8 +18,7 @@ func ScrapLinks(search string) []string {
 	script = ""
 	url := getSearchURL(search)
 
-	// log.Println(url)
-
+	log.Println(url)
 	err := client.Visit(url)
 	if err != nil {
 		log.Fatal(err)
