@@ -39,7 +39,12 @@ func HandleCommand(command rune, key keyboard.Key) (success bool) {
 	}
 
 	switch command {
-
+	case '[':
+		fmt.Printf("%c\n", command)
+		speedDownHandler(args)
+	case ']':
+		fmt.Printf("%c\n", command)
+		speedUpHandler(args)
 	case 'c':
 		fmt.Printf("%c\n", command)
 		ClearScr()

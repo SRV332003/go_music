@@ -21,6 +21,7 @@ var format beep.Format
 var seeker beep.StreamSeekCloser
 var loop bool
 var volume *effects.Volume
+var resampler *beep.Resampler
 var ctrl *beep.Ctrl
 
 var i int
@@ -84,12 +85,13 @@ func changeStream(file string) (err error) {
 	}
 	seeker = streamer.(beep.StreamSeekCloser)
 	ctrl = &beep.Ctrl{Streamer: beep.Iterate(iterator), Paused: false}
+	resampler = beep.ResampleRatio(4, 1, ctrl)
 	prevVolume := 0.0
 	if volume != nil {
 		prevVolume = volume.Volume
 	}
 	volume = &effects.Volume{
-		Streamer: ctrl,
+		Streamer: resampler,
 		Base:     2,
 		Volume:   float64(prevVolume),
 		Silent:   false,
@@ -137,6 +139,8 @@ func Next() {
 	// log.Println(seeker.Position(), seeker.Len())
 }
 
+// Change volume of the song
+// n: volume change factor (-1.0 to 1.0)
 func ChangeVolume(n float64) {
 	// log.Println("Changing volume to", volume.Volume+n)
 	if volume.Volume+n >= 1 {
@@ -151,4 +155,12 @@ func ChangeVolume(n float64) {
 	volume.Volume += float64(n)
 	speaker.Unlock()
 
+}
+
+// change speed of the song
+// n: speed change factor (-1.0 to 1.0)
+func ChangeSpeed(n float64) {
+	speaker.Lock()
+	resampler.SetRatio(resampler.Ratio() + n)
+	speaker.Unlock()
 }

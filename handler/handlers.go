@@ -2,10 +2,11 @@ package handler
 
 import (
 	"fmt"
-	"github.com/SRV332003/go_music/filemanager"
-	"github.com/SRV332003/go_music/player"
 	"os"
 	"os/exec"
+
+	"github.com/SRV332003/go_music/filemanager"
+	"github.com/SRV332003/go_music/player"
 
 	"github.com/eiannone/keyboard"
 
@@ -104,6 +105,14 @@ func volumeUpHandler(args []string) {
 
 func volumeDownHandler(args []string) {
 	player.ChangeVolume(-0.5)
+}
+
+func speedUpHandler(args []string) {
+	player.ChangeSpeed(0.1)
+}
+
+func speedDownHandler(args []string) {
+	player.ChangeSpeed(-0.1)
 }
 
 func help() {

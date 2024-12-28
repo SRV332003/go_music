@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/SRV332003/go_music/handler"
+	"github.com/SRV332003/go_music/player"
 
 	"github.com/eiannone/keyboard"
 	"github.com/fatih/color"
@@ -12,7 +13,8 @@ import (
 func main() {
 
 	handler.ClearScr()
-	fmt.Printf(color.CyanString("dhvani > "))
+	fmt.Print(color.CyanString("dhvani > "))
+	player.StopIfPlaying()
 
 	for {
 
