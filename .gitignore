@@ -4,3 +4,4 @@ builds
 dist/
 *.env
 .goreleaser.yaml
+test.go
